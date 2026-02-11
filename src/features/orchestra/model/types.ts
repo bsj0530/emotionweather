@@ -1,25 +1,24 @@
 export type WeatherId = "sunny" | "cloudy" | "rain" | "storm" | "fog" | "wind";
 
-export type SituationCard = {
+export interface EmotionOption {
+  id: string; // 예: "joy", "sadness", "anger" ...
+  label: string;
+  weatherId: WeatherId;
+}
+
+export interface SituationCard {
   id: string;
   prompt: string;
   imageUrl: string;
-  reasonHint?: string; // 문장에 넣을 이유 힌트(선택)
-};
+  // ✅ 변경: 감정ID를 키로, 문장을 값으로 갖는 객체
+  sentences: Record<string, string>;
+}
 
-export type EmotionOption = {
-  id: string;
-  label: string; // 화면에 보이는 감정 단어(확장 표현)
-  weatherId: WeatherId;
-};
-
-export type Selection = {
-  turnIndex: number; // 0..(students-1)
+export interface Selection {
+  turnIndex: number;
   emotionId: string;
   emotionLabel: string;
   sentence: string;
-  weatherId: WeatherId;
-  playerName?: string;
-};
-
-export type Stage = "turn" | "weather";
+  weatherId: string;
+  playerName: string;
+}

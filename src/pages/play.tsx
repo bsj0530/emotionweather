@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router";
-import { ArrowLeft, RefreshCw, Home } from "lucide-react";
+import { RefreshCw, Home, User } from "lucide-react";
 import Lottie from "lottie-react";
 
 import type {
@@ -10,15 +10,12 @@ import type {
   WeatherId,
 } from "../features/orchestra/model/types";
 
-// 아까 만든 weatherLottie.ts와 mapping.ts에서 가져옴
-import { buildSentence } from "../features/orchestra/model/mapping";
 import { WEATHER_LOTTIE } from "../features/orchestra/model/weatherLottie";
 
 import {
   getEmotionOptions,
   getRandomSituation,
 } from "../features/orchestra/data/repository";
-import SituationPanel from "../features/orchestra/components/SituationPanel";
 
 // ==========================================
 // 1. 헬퍼 함수
@@ -34,15 +31,49 @@ function getEmoji(label: string) {
 }
 
 // ==========================================
-// 2. 배경 컴포넌트
+// 2. 배경 컴포넌트 (요청하신 BackgroundLogin 코드 적용)
 // ==========================================
 function BackgroundPlay() {
   return (
     <div className="fixed inset-0 -z-10 h-full w-full overflow-hidden bg-white">
+      {/* ================= TOP AREA ================= */}
+
       <div className="absolute top-[6%] left-[15%] h-10 w-10 animate-bounce rounded-full bg-[#aee6ff] opacity-40 [animation-duration:5s]" />
       <div className="absolute top-[8%] left-[45%] h-6 w-6 animate-pulse rounded-full bg-[#ffb3c7] opacity-30 [animation-duration:3s]" />
-      <div className="absolute top-[50%] right-[10%] h-16 w-16 animate-bounce rounded-full bg-[#aee6ff] opacity-30 [animation-duration:6s]" />
-      <div className="absolute bottom-[20%] left-[20%] h-14 w-14 animate-bounce rounded-full bg-[#ffb3c7] opacity-35 [animation-duration:6s]" />
+      <div className="absolute top-[10%] right-[18%] h-12 w-12 animate-bounce rounded-full bg-[#aee6ff] opacity-35 [animation-duration:6s]" />
+      <div className="absolute top-[18%] right-[35%] h-5 w-5 animate-pulse rounded-full bg-[#ffb3c7] opacity-25 [animation-duration:2.5s]" />
+      <div className="absolute top-[14%] left-[28%] h-14 w-14 animate-bounce rounded-full bg-[#ffb3c7] opacity-35 [animation-duration:5.5s]" />
+      <div className="absolute top-[20%] left-[60%] h-6 w-6 rounded-full bg-[#aee6ff] opacity-25" />
+
+      {/* ================= MIDDLE LEFT ================= */}
+
+      <div className="absolute top-[40%] left-[6%] h-12 w-12 animate-bounce rounded-full bg-[#aee6ff] opacity-35 [animation-duration:4.8s]" />
+      <div className="absolute top-[55%] left-[14%] h-6 w-6 animate-pulse rounded-full bg-[#ffb3c7] opacity-25 [animation-duration:3s]" />
+      <div className="absolute top-[48%] left-[18%] h-8 w-8 animate-bounce rounded-full bg-[#ffb3c7] opacity-30 [animation-duration:5s]" />
+
+      {/* ================= MIDDLE RIGHT ================= */}
+
+      <div className="absolute top-[42%] right-[6%] h-12 w-12 animate-bounce rounded-full bg-[#ffb3c7] opacity-35 [animation-duration:5s]" />
+      <div className="absolute top-[58%] right-[14%] h-6 w-6 animate-pulse rounded-full bg-[#aee6ff] opacity-25 [animation-duration:3s]" />
+      <div className="absolute top-[50%] right-[18%] h-8 w-8 animate-bounce rounded-full bg-[#aee6ff] opacity-30 [animation-duration:5.5s]" />
+
+      {/* ================= BOTTOM AREA ================= */}
+
+      <div className="absolute bottom-[20%] left-[20%] h-14 w-14 animate-bounce rounded-full bg-[#aee6ff] opacity-35 [animation-duration:6s]" />
+      <div className="absolute bottom-[12%] left-[45%] h-6 w-6 animate-pulse rounded-full bg-[#ffb3c7] opacity-25 [animation-duration:3s]" />
+      <div className="absolute right-[30%] bottom-[8%] h-10 w-10 animate-bounce rounded-full bg-[#aee6ff] opacity-30 [animation-duration:5s]" />
+      <div className="absolute right-[12%] bottom-[25%] h-12 w-12 animate-bounce rounded-full bg-[#ffb3c7] opacity-40 [animation-duration:5.5s]" />
+      <div className="absolute right-[45%] bottom-[15%] h-5 w-5 animate-pulse rounded-full bg-[#aee6ff] opacity-25 [animation-duration:2.5s]" />
+      <div className="absolute bottom-[6%] left-[10%] h-8 w-8 rounded-full bg-[#ffb3c7] opacity-30" />
+
+      {/* ================= CENTER SIDE AREA ================= */}
+
+      <div className="absolute top-[38%] left-[26%] h-14 w-14 animate-bounce rounded-full bg-[#aee6ff] opacity-35 [animation-duration:5s]" />
+      <div className="absolute top-[58%] left-[28%] h-10 w-10 animate-bounce rounded-full bg-[#ffb3c7] opacity-30 [animation-duration:6s]" />
+      <div className="absolute top-[40%] right-[26%] h-14 w-14 animate-bounce rounded-full bg-[#ffb3c7] opacity-35 [animation-duration:5.5s]" />
+      <div className="absolute top-[50%] right-[32%] h-6 w-6 animate-pulse rounded-full bg-[#aee6ff] opacity-25 [animation-duration:3s]" />
+      <div className="absolute top-[60%] right-[30%] h-10 w-10 animate-bounce rounded-full bg-[#aee6ff] opacity-30 [animation-duration:6s]" />
+      <div className="absolute top-[44%] right-[18%] h-5 w-5 rounded-full bg-[#ffb3c7] opacity-25" />
     </div>
   );
 }
@@ -54,7 +85,6 @@ export default function Play() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
 
-  // URL에서 닉네임 가져오기
   const playerNames = useMemo(() => {
     const rawNames = params.get("names");
     if (!rawNames) return ["학생1", "학생2"];
@@ -66,12 +96,9 @@ export default function Play() {
   const [turn, setTurn] = useState(0);
   const [situation, setSituation] = useState<SituationCard | null>(null);
   const [options, setOptions] = useState<EmotionOption[]>([]);
-
-  // ★ 여기가 중요: 아이들의 선택이 여기에 쌓임
   const [selections, setSelections] = useState<Selection[]>([]);
   const [isFinished, setIsFinished] = useState(false);
 
-  // 게임 초기화
   async function boot() {
     setTurn(0);
     setSelections([]);
@@ -87,10 +114,8 @@ export default function Play() {
 
   useEffect(() => {
     void boot();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 감정 선택 시 실행
   function onPick(emotionId: string) {
     if (!situation) return;
     if (turn >= totalPlayers) return;
@@ -99,18 +124,14 @@ export default function Play() {
     if (!opt) return;
 
     const currentPlayerName = playerNames[turn];
+    const finalSentence =
+      situation.sentences[emotionId] || `나는 ${opt.label}.`;
 
-    // 선택 정보 객체 생성
     const nextSelection: Selection = {
       turnIndex: turn,
       emotionId: opt.id,
       emotionLabel: opt.label,
-      // data.ts의 reasonHint를 사용하여 문장 완성
-      sentence: buildSentence(
-        situation.prompt,
-        opt.label,
-        situation.reasonHint,
-      ),
+      sentence: finalSentence,
       weatherId: opt.weatherId,
       playerName: currentPlayerName,
     };
@@ -119,7 +140,6 @@ export default function Play() {
 
     const nextTurn = turn + 1;
     if (nextTurn >= totalPlayers) {
-      // 마지막 사람이면 결과 화면으로 전환
       setIsFinished(true);
     } else {
       setTurn(nextTurn);
@@ -144,18 +164,13 @@ export default function Play() {
       <BackgroundPlay />
 
       {/* 헤더 */}
-      <header className="flex h-14 shrink-0 items-center justify-between px-4">
+      <header className="z-10 flex h-14 shrink-0 items-center justify-between px-4">
         <button
           onClick={() => navigate("/")}
           className="flex items-center gap-1 rounded-full bg-white/60 px-3 py-1.5 text-xs font-bold text-zinc-500 shadow-sm backdrop-blur hover:bg-white"
         >
           <Home size={14} /> 홈
         </button>
-
-        <div className="text-xs font-medium text-zinc-400">
-          {/* 결과 화면일 땐 '결과 발표', 진행 중일 땐 순서 표시 */}
-          {isFinished ? "결과 발표 🎉" : `${turn + 1} / ${totalPlayers} 번째`}
-        </div>
 
         <button
           onClick={() => void boot()}
@@ -169,21 +184,39 @@ export default function Play() {
       {/* 4. 결과 화면 (모든 선택이 끝났을 때) */}
       {/* ========================================================= */}
       {isFinished ? (
-        <main className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 pt-2 pb-20">
-          {/* 상단 타이틀 */}
-          <div className="text-center">
-            <h2 className="text-2xl font-extrabold text-zinc-800">
-              우리 반 날씨 이야기
-            </h2>
-            <p className="mt-1 text-sm text-zinc-500">
-              같은 상황이지만 서로 다른 마음 날씨가 모였어요.
-            </p>
+        <main className="flex flex-1 flex-col overflow-y-auto pb-20">
+          {/* 상단: 상황 이미지 */}
+          <div className="w-full shrink-0">
+            <div className="relative aspect-video w-full bg-zinc-100 md:aspect-[21/9]">
+              <img
+                src={situation.imageUrl}
+                alt="상황 이미지"
+                className="h-full w-full object-cover"
+              />
+            </div>
+
+            {/* 질문 텍스트 영역 */}
+            <div className="relative z-10 -mt-8 px-6 text-center">
+              <span className="mb-2 inline-block rounded-full bg-white px-3 py-1 text-xs font-bold text-sky-600 shadow-sm">
+                오늘의 상황
+              </span>
+              <h2 className="text-2xl leading-relaxed font-bold break-keep text-zinc-800 drop-shadow-sm">
+                Q. {situation.prompt}
+              </h2>
+            </div>
           </div>
 
-          {/* 결과 리스트 (카드 형태) */}
-          <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {/* 구분 타이틀 */}
+          <div className="relative py-6 text-center">
+            <div className="absolute inset-0 top-1/2 -z-10 h-px w-full bg-gradient-to-r from-transparent via-zinc-300 to-transparent" />
+            <span className="bg-[#fcfdfe] px-4 text-sm font-medium text-zinc-500">
+              우리 반 친구들의 날씨는?
+            </span>
+          </div>
+
+          {/* 결과 리스트 */}
+          <div className="grid w-full grid-cols-1 gap-4 px-4 md:grid-cols-2 lg:grid-cols-3">
             {selections.map((selection, idx) => {
-              // 선택한 날씨에 맞는 Lottie 가져오기
               const weatherId = selection.weatherId as WeatherId;
               const animationData =
                 WEATHER_LOTTIE[weatherId] || WEATHER_LOTTIE.sunny;
@@ -191,15 +224,13 @@ export default function Play() {
               return (
                 <div
                   key={idx}
-                  className="flex flex-col items-center rounded-2xl border border-zinc-100 bg-white/80 p-4 shadow-sm backdrop-blur transition-transform hover:scale-[1.02]"
+                  className="flex flex-col items-center rounded-2xl border border-zinc-100 bg-white/80 p-5 shadow-sm backdrop-blur transition-transform hover:scale-[1.02]"
                 >
-                  {/* 이름 뱃지 */}
                   <div className="mb-2 rounded-full bg-pink-100 px-3 py-1 text-xs font-bold text-pink-600">
                     {selection.playerName}
                   </div>
 
-                  {/* 날씨 Lottie (좀 더 크게) */}
-                  <div className="h-24 w-24">
+                  <div className="h-28 w-28">
                     <Lottie
                       animationData={animationData}
                       loop={true}
@@ -207,25 +238,24 @@ export default function Play() {
                     />
                   </div>
 
-                  {/* 감정 라벨 */}
-                  <div className="mt-1 text-lg font-bold text-zinc-800">
+                  <div className="mt-2 text-lg font-bold text-zinc-500">
                     {getEmoji(selection.emotionLabel)} {selection.emotionLabel}
                   </div>
 
-                  {/* 완성된 문장 (말풍선 느낌) */}
-                  <div className="mt-3 w-full rounded-xl bg-zinc-50 px-3 py-2 text-center text-sm font-medium text-zinc-600">
-                    "{selection.sentence}"
+                  <div className="mt-4 w-full rounded-xl bg-zinc-50 px-4 py-4 text-center">
+                    <p className="text-xl leading-snug font-bold break-keep text-zinc-800">
+                      "{selection.sentence}"
+                    </p>
                   </div>
                 </div>
               );
             })}
           </div>
 
-          {/* 하단 재시작 버튼 */}
-          <div className="mt-4 flex justify-center pb-8">
+          <div className="mt-8 flex justify-center px-4">
             <button
               onClick={() => void boot()}
-              className="flex w-full max-w-sm items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-pink-400 to-rose-500 py-3 text-lg font-bold text-white shadow-lg transition hover:scale-[1.02]"
+              className="flex w-full max-w-sm items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-pink-400 to-rose-500 py-4 text-lg font-bold text-white shadow-lg transition hover:scale-[1.02]"
             >
               <RefreshCw size={20} />
               다음 상황으로 넘어가기
@@ -236,72 +266,68 @@ export default function Play() {
         /* ========================================================= */
         /* 5. 게임 진행 화면 (선택 중일 때) */
         /* ========================================================= */
-        <main className="flex flex-1 flex-col items-center gap-4 px-4 pb-4">
-          {/* 상황 카드 (화면 비율상 가장 크게) */}
-          <div className="flex w-full max-w-lg flex-grow flex-col overflow-hidden rounded-3xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur">
-            <div className="h-full w-full overflow-hidden p-2">
-              <div className="flex h-full w-full items-center justify-center">
-                <SituationPanel situation={situation} />
-              </div>
-            </div>
+        <main className="flex w-full flex-1 flex-col items-center pb-4">
+          {/* 이미지 영역: 넓게 유지 */}
+          {/* [수정됨] max-h-[50vh] 추가하여 높이 제한을 둠 */}
+          <div className="relative mx-auto mb-4 max-h-[50vh] min-h-0 w-full max-w-3xl flex-1 overflow-hidden rounded-b-3xl shadow-sm">
+            <img
+              src={situation.imageUrl}
+              alt="Situation"
+              className="h-full w-full object-cover"
+            />
           </div>
 
-          {/* 멘트 및 진행바 */}
-          <div className="w-full max-w-lg text-center">
-            <div className="mb-2 flex justify-center gap-1.5">
-              {playerNames.map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-2 w-2 rounded-full transition-colors ${
-                    i < turn
-                      ? "bg-pink-400"
-                      : i === turn
-                        ? "animate-pulse bg-sky-400"
-                        : "bg-zinc-200"
-                  }`}
-                />
-              ))}
-            </div>
-
-            <h2 className="text-lg font-bold text-zinc-800">
-              <span className="text-pink-500 underline decoration-wavy decoration-2 underline-offset-4">
-                {currentName}
+          <div className="relative z-10 -mt-12 flex w-full max-w-lg flex-col items-center px-5">
+            {/* 플레이어 차례 배지 */}
+            <div className="mb-2 flex items-center gap-1.5 rounded-full border border-pink-100 bg-white/90 py-1 pr-3 pl-1 shadow-sm backdrop-blur-sm">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-pink-100 text-pink-500">
+                <User size={14} fill="currentColor" />
               </span>
-              님의 기분을 날씨로 표현하면?
+              <span className="text-sm font-bold text-pink-600">
+                {currentName} 차례
+              </span>
+            </div>
+
+            {/* 질문 텍스트 */}
+            <h2 className="mb-4 text-center text-xl leading-snug font-bold break-keep text-zinc-800 md:text-2xl">
+              Q. {situation.prompt}
             </h2>
-          </div>
 
-          {/* 선택 버튼 영역 */}
-          <div className="grid w-full max-w-lg grid-cols-2 gap-3 md:grid-cols-3">
-            {options.map((opt) => {
-              const weatherId = opt.weatherId as WeatherId;
-              const animationData =
-                WEATHER_LOTTIE[weatherId] || WEATHER_LOTTIE.sunny;
+            {/* 6개 옵션을 3열(grid-cols-3)로 배치 */}
+            <div className="grid w-full grid-cols-3 gap-2">
+              {options.map((opt) => {
+                const weatherId = opt.weatherId as WeatherId;
+                const animationData =
+                  WEATHER_LOTTIE[weatherId] || WEATHER_LOTTIE.sunny;
 
-              return (
-                <button
-                  key={opt.id}
-                  onClick={() => onPick(opt.id)}
-                  className="group relative flex items-center justify-between rounded-2xl border border-zinc-100 bg-white p-3 shadow-sm transition-all hover:scale-[1.02] hover:border-pink-200 hover:bg-pink-50 hover:shadow-md active:scale-95"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="text-xl drop-shadow-sm filter">
-                      {getEmoji(opt.label)}
-                    </span>
-                    <span className="text-sm font-bold text-zinc-700 group-hover:text-pink-600">
-                      {opt.label}
-                    </span>
-                  </div>
-                  <div className="h-10 w-10 opacity-90 group-hover:opacity-100">
-                    <Lottie
-                      animationData={animationData}
-                      loop={true}
-                      className="h-full w-full"
-                    />
-                  </div>
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={opt.id}
+                    onClick={() => onPick(opt.id)}
+                    className="group relative flex flex-col items-center justify-center gap-1 rounded-2xl border border-zinc-100 bg-white p-2 py-3 shadow-sm transition-all hover:scale-[1.02] hover:border-pink-200 hover:bg-pink-50 hover:shadow-md active:scale-95"
+                  >
+                    {/* 날씨 아이콘 */}
+                    <div className="h-10 w-10 opacity-90 group-hover:opacity-100">
+                      <Lottie
+                        animationData={animationData}
+                        loop={true}
+                        className="h-full w-full"
+                      />
+                    </div>
+
+                    {/* 이모지 + 라벨 */}
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm drop-shadow-sm filter">
+                        {getEmoji(opt.label)}
+                      </span>
+                      <span className="text-xs font-bold text-zinc-700 group-hover:text-pink-600">
+                        {opt.label}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </main>
       )}

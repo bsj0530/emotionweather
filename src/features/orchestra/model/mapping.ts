@@ -1,5 +1,6 @@
 import type { WeatherId } from "./types";
 
+// ✅ 날씨 아이콘 및 배경색 매핑 (유지)
 export const WEATHER_UI: Record<
   WeatherId,
   { label: string; icon: string; bgClass: string }
@@ -12,14 +13,4 @@ export const WEATHER_UI: Record<
   wind: { label: "바람", icon: "🌬️", bgClass: "bg-emerald-50" },
 };
 
-export function buildSentence(
-  prompt: string,
-  emotionLabel: string,
-  reason?: string,
-) {
-  // 너무 길면 prompt 요약 대신 reasonHint를 쓰는 게 안전
-  if (reason && reason.trim().length > 0) {
-    return `나는 ${emotionLabel}. 왜냐하면 ${reason} 그래서요.`;
-  }
-  return `나는 ${emotionLabel}.`;
-}
+// ❌ buildSentence 함수 삭제됨 (이제 데이터에서 직접 가져옴)
