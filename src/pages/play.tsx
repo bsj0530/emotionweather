@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router";
-import { ArrowLeft, RefreshCw } from "lucide-react";
-import Lottie from "lottie-react"; // npm install lottie-react 필요
+import { ArrowLeft, RefreshCw, Home } from "lucide-react";
+import Lottie from "lottie-react";
 
 import type {
   EmotionOption,
@@ -10,10 +10,8 @@ import type {
   WeatherId,
 } from "../features/orchestra/model/types";
 
-// ✅ 문장 생성 로직은 mapping.ts에서
+// 아까 만든 weatherLottie.ts와 mapping.ts에서 가져옴
 import { buildSentence } from "../features/orchestra/model/mapping";
-
-// ✅ Lottie 매핑은 weatherLottie.ts에서 가져오기 (경로 확인해주세요!)
 import { WEATHER_LOTTIE } from "../features/orchestra/model/weatherLottie";
 
 import {
@@ -25,8 +23,6 @@ import SituationPanel from "../features/orchestra/components/SituationPanel";
 // ==========================================
 // 1. 헬퍼 함수
 // ==========================================
-
-// 감정 라벨 이모지
 function getEmoji(label: string) {
   if (label.includes("기뻐") || label.includes("행복")) return "😆";
   if (label.includes("슬퍼") || label.includes("우울")) return "😭";
@@ -58,6 +54,7 @@ export default function Play() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
 
+  // URL에서 닉네임 가져오기
   const playerNames = useMemo(() => {
     const rawNames = params.get("names");
     if (!rawNames) return ["학생1", "학생2"];
@@ -69,9 +66,12 @@ export default function Play() {
   const [turn, setTurn] = useState(0);
   const [situation, setSituation] = useState<SituationCard | null>(null);
   const [options, setOptions] = useState<EmotionOption[]>([]);
+
+  // ★ 여기가 중요: 아이들의 선택이 여기에 쌓임
   const [selections, setSelections] = useState<Selection[]>([]);
   const [isFinished, setIsFinished] = useState(false);
 
+  // 게임 초기화
   async function boot() {
     setTurn(0);
     setSelections([]);
@@ -87,8 +87,10 @@ export default function Play() {
 
   useEffect(() => {
     void boot();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // 감정 선택 시 실행
   function onPick(emotionId: string) {
     if (!situation) return;
     if (turn >= totalPlayers) return;
@@ -98,10 +100,12 @@ export default function Play() {
 
     const currentPlayerName = playerNames[turn];
 
+    // 선택 정보 객체 생성
     const nextSelection: Selection = {
       turnIndex: turn,
       emotionId: opt.id,
       emotionLabel: opt.label,
+      // data.ts의 reasonHint를 사용하여 문장 완성
       sentence: buildSentence(
         situation.prompt,
         opt.label,
@@ -115,6 +119,7 @@ export default function Play() {
 
     const nextTurn = turn + 1;
     if (nextTurn >= totalPlayers) {
+      // 마지막 사람이면 결과 화면으로 전환
       setIsFinished(true);
     } else {
       setTurn(nextTurn);
@@ -126,7 +131,7 @@ export default function Play() {
       <div className="flex h-[100dvh] w-full items-center justify-center">
         <BackgroundPlay />
         <div className="animate-pulse text-lg font-bold text-zinc-400">
-          로딩 중... ☁️
+          카드를 섞고 있어요... 🃏
         </div>
       </div>
     );
@@ -144,11 +149,14 @@ export default function Play() {
           onClick={() => navigate("/")}
           className="flex items-center gap-1 rounded-full bg-white/60 px-3 py-1.5 text-xs font-bold text-zinc-500 shadow-sm backdrop-blur hover:bg-white"
         >
-          <ArrowLeft size={14} /> 홈
+          <Home size={14} /> 홈
         </button>
+
         <div className="text-xs font-medium text-zinc-400">
-          {turn + 1} / {totalPlayers} 번째
+          {/* 결과 화면일 땐 '결과 발표', 진행 중일 땐 순서 표시 */}
+          {isFinished ? "결과 발표 🎉" : `${turn + 1} / ${totalPlayers} 번째`}
         </div>
+
         <button
           onClick={() => void boot()}
           className="flex items-center gap-1 rounded-full bg-white/60 px-3 py-1.5 text-xs font-bold text-zinc-500 shadow-sm backdrop-blur hover:bg-white"
@@ -157,19 +165,88 @@ export default function Play() {
         </button>
       </header>
 
-      {/* 메인 컨텐츠 */}
-      <main className="flex flex-1 flex-col items-center gap-4 px-4 pb-4">
-        {/* 1. 상황 카드 */}
-        <div className="flex w-full max-w-lg flex-grow flex-col overflow-hidden rounded-3xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur">
-          <div className="h-full w-full overflow-hidden p-2">
-            <div className="flex h-full w-full items-center justify-center">
-              <SituationPanel situation={situation} />
+      {/* ========================================================= */}
+      {/* 4. 결과 화면 (모든 선택이 끝났을 때) */}
+      {/* ========================================================= */}
+      {isFinished ? (
+        <main className="flex flex-1 flex-col gap-4 overflow-y-auto px-4 pt-2 pb-20">
+          {/* 상단 타이틀 */}
+          <div className="text-center">
+            <h2 className="text-2xl font-extrabold text-zinc-800">
+              우리 반 날씨 이야기
+            </h2>
+            <p className="mt-1 text-sm text-zinc-500">
+              같은 상황이지만 서로 다른 마음 날씨가 모였어요.
+            </p>
+          </div>
+
+          {/* 결과 리스트 (카드 형태) */}
+          <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {selections.map((selection, idx) => {
+              // 선택한 날씨에 맞는 Lottie 가져오기
+              const weatherId = selection.weatherId as WeatherId;
+              const animationData =
+                WEATHER_LOTTIE[weatherId] || WEATHER_LOTTIE.sunny;
+
+              return (
+                <div
+                  key={idx}
+                  className="flex flex-col items-center rounded-2xl border border-zinc-100 bg-white/80 p-4 shadow-sm backdrop-blur transition-transform hover:scale-[1.02]"
+                >
+                  {/* 이름 뱃지 */}
+                  <div className="mb-2 rounded-full bg-pink-100 px-3 py-1 text-xs font-bold text-pink-600">
+                    {selection.playerName}
+                  </div>
+
+                  {/* 날씨 Lottie (좀 더 크게) */}
+                  <div className="h-24 w-24">
+                    <Lottie
+                      animationData={animationData}
+                      loop={true}
+                      className="h-full w-full"
+                    />
+                  </div>
+
+                  {/* 감정 라벨 */}
+                  <div className="mt-1 text-lg font-bold text-zinc-800">
+                    {getEmoji(selection.emotionLabel)} {selection.emotionLabel}
+                  </div>
+
+                  {/* 완성된 문장 (말풍선 느낌) */}
+                  <div className="mt-3 w-full rounded-xl bg-zinc-50 px-3 py-2 text-center text-sm font-medium text-zinc-600">
+                    "{selection.sentence}"
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* 하단 재시작 버튼 */}
+          <div className="mt-4 flex justify-center pb-8">
+            <button
+              onClick={() => void boot()}
+              className="flex w-full max-w-sm items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-pink-400 to-rose-500 py-3 text-lg font-bold text-white shadow-lg transition hover:scale-[1.02]"
+            >
+              <RefreshCw size={20} />
+              다음 상황으로 넘어가기
+            </button>
+          </div>
+        </main>
+      ) : (
+        /* ========================================================= */
+        /* 5. 게임 진행 화면 (선택 중일 때) */
+        /* ========================================================= */
+        <main className="flex flex-1 flex-col items-center gap-4 px-4 pb-4">
+          {/* 상황 카드 (화면 비율상 가장 크게) */}
+          <div className="flex w-full max-w-lg flex-grow flex-col overflow-hidden rounded-3xl border border-zinc-200 bg-white/80 shadow-sm backdrop-blur">
+            <div className="h-full w-full overflow-hidden p-2">
+              <div className="flex h-full w-full items-center justify-center">
+                <SituationPanel situation={situation} />
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* 2. 멘트 및 진행바 */}
-        {!isFinished ? (
+          {/* 멘트 및 진행바 */}
           <div className="w-full max-w-lg text-center">
             <div className="mb-2 flex justify-center gap-1.5">
               {playerNames.map((_, i) => (
@@ -193,20 +270,10 @@ export default function Play() {
               님의 기분을 날씨로 표현하면?
             </h2>
           </div>
-        ) : (
-          <div className="w-full max-w-lg text-center">
-            <h2 className="text-2xl font-extrabold text-zinc-800">
-              모두 선택 완료! 🎉
-            </h2>
-            <p className="text-sm text-zinc-500">모두의 마음이 모였어요.</p>
-          </div>
-        )}
 
-        {/* 3. 선택 버튼 영역 (Lottie 적용) */}
-        {!isFinished ? (
+          {/* 선택 버튼 영역 */}
           <div className="grid w-full max-w-lg grid-cols-2 gap-3 md:grid-cols-3">
             {options.map((opt) => {
-              // WeatherId에 맞는 Lottie JSON 가져오기
               const weatherId = opt.weatherId as WeatherId;
               const animationData =
                 WEATHER_LOTTIE[weatherId] || WEATHER_LOTTIE.sunny;
@@ -217,7 +284,6 @@ export default function Play() {
                   onClick={() => onPick(opt.id)}
                   className="group relative flex items-center justify-between rounded-2xl border border-zinc-100 bg-white p-3 shadow-sm transition-all hover:scale-[1.02] hover:border-pink-200 hover:bg-pink-50 hover:shadow-md active:scale-95"
                 >
-                  {/* 왼쪽: 이모지 + 텍스트 */}
                   <div className="flex items-center gap-2">
                     <span className="text-xl drop-shadow-sm filter">
                       {getEmoji(opt.label)}
@@ -226,9 +292,6 @@ export default function Play() {
                       {opt.label}
                     </span>
                   </div>
-
-                  {/* 오른쪽: Lottie 애니메이션 */}
-                  {/* h-10 w-10 (40px) 정도로 크기 고정 */}
                   <div className="h-10 w-10 opacity-90 group-hover:opacity-100">
                     <Lottie
                       animationData={animationData}
@@ -240,15 +303,8 @@ export default function Play() {
               );
             })}
           </div>
-        ) : (
-          <button
-            onClick={() => void boot()}
-            className="w-full max-w-lg rounded-2xl bg-gradient-to-r from-pink-400 to-rose-500 py-4 text-lg font-bold text-white shadow-lg transition hover:scale-[1.02]"
-          >
-            다음 상황 카드 뽑기 ➔
-          </button>
-        )}
-      </main>
+        </main>
+      )}
     </div>
   );
 }
