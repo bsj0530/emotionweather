@@ -19,6 +19,7 @@ export interface Selection {
   emotionId: string;
   emotionLabel: string;
   sentence: string;
-  weatherId: string;
+  // 👇 여기가 핵심 변경사항입니다 (string -> WeatherId)
+  weatherId: WeatherId;
   playerName: string;
 }
