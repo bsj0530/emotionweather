@@ -7,7 +7,7 @@ import storm from "@/assets/lottie/Weather-storm.json";
 import thunder from "@/assets/lottie/Weather-thunder.json";
 import partlyShower from "@/assets/lottie/Weather-partly shower.json";
 import sunny from "@/assets/lottie/sunny.json";
-import rainbow from "@/assets/lottie/rainbow.json";
+import rainbow from "@/assets/lottie/Rainbow.json";
 import partlycloudy from "@/assets/lottie/Weather-partly cloudy.json";
 
 // ✅ 네가 가진 파일 기준으로 매핑
