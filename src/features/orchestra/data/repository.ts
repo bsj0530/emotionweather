@@ -9,7 +9,7 @@ const EMOTION_META: Record<
 > = {
   "emo-annoyed": { label: "짜증났어요", weatherId: "fog" },
   "emo-unfair": { label: "억울했어요", weatherId: "fog" },
-  "emo-angry": { label: "화났어요", weatherId: "storm" },
+  "emo-angry": { label: "화가 났어요", weatherId: "storm" },
   "emo-sad": { label: "속상했어요", weatherId: "rain" },
   "emo-upset": { label: "기분 나빴어요", weatherId: "wind" },
   "emo-disappointed": { label: "서운했어요", weatherId: "rain" },

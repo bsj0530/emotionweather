@@ -44,7 +44,7 @@ export const MOCK_SITUATIONS: SituationCard[] = [
       "emo-annoyed": "가위바위보에 져서 짜증났어요.",
       "emo-unfair": "가위바위보에 져서 억울했어요",
       "emo-angry": "친구가 이겨서 화가 났어요",
-      "emo-sad": "가위바위보에 져서 슬펐어요",
+      "emo-sad": "가위바위보에 져서 속상했어요",
       "emo-upset": "가위바위보에 져서 기분 나빴어요",
       "emo-jealous": "가위바위보에 이긴 친구가 너무 부러웠어요",
     },
