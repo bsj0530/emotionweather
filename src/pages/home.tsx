@@ -84,9 +84,9 @@ export default function Home() {
       <div className="relative flex w-full max-w-lg flex-col items-center gap-8 px-6 py-10 md:gap-12">
         <div className="text-center">
           <h1 className="text-3xl font-extrabold tracking-tight md:text-5xl">
-            감정을 골라
+            감정을
             <br />
-            날씨로 표현해요
+            다양하게 표현해봐요
           </h1>
         </div>
 

@@ -271,10 +271,10 @@ export default function Play() {
         <main className="flex flex-1 flex-col items-center overflow-y-auto px-4 py-8">
           <div className="mb-10 text-center">
             <h2 className="text-4xl font-extrabold text-zinc-800 drop-shadow-sm">
-              우리 반 감정 날씨 결과 🌈
+              우리 반 감정 결과 🌈
             </h2>
             <p className="mt-3 text-lg text-zinc-500">
-              친구들이 선택한 마음의 날씨를 확인해보세요.
+              친구들이 선택한 마음을 확인해보세요.
             </p>
           </div>
 
