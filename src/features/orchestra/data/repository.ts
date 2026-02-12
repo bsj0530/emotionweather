@@ -22,7 +22,7 @@ const EMOTION_META: Record<
   "emo-happy": { label: "기뻤어요", weatherId: "sunny" },
   "emo-proud": { label: "뿌듯했어요", weatherId: "rainbow" },
   "emo-thankful": { label: "고마웠어요", weatherId: "rainbow" },
-  "emo-relieved": { label: "마음이 놓여요", weatherId: "sunny" },
+  "emo-relieved": { label: "마음이 놓였어요", weatherId: "sunny" },
 };
 
 export function getEmotionOptionsForSituation(
