@@ -30,7 +30,7 @@ export const MOCK_SITUATIONS: SituationCard[] = [
       "emo-proud": "발표를 잘한 것 같아서 뿌듯했어요.",
       "emo-embarrassed": "선생님과 친구들에게 박수받아서 살짝 부끄러웠어요.",
       "emo-surprised": "선생님과 친구들이 생각보다 크게 박수쳐줘서 놀랐어요.",
-      "emo-relieved": "선생님과 친구들이 박수쳐줘서 행복했어요",
+      "emo-relieved": "발표가 끝나서 마음이 놓였어요.",
       "emo-thankful": "선생님과 친구들이 박수쳐줘서 고마웠어요.",
     },
   },

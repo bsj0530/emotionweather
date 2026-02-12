@@ -7,22 +7,22 @@ const EMOTION_META: Record<
   string,
   { label: string; weatherId: EmotionOption["weatherId"] }
 > = {
-  "emo-annoyed": { label: "짜증나요", weatherId: "fog" },
-  "emo-unfair": { label: "억울해요", weatherId: "fog" },
-  "emo-angry": { label: "화나요", weatherId: "storm" },
-  "emo-sad": { label: "속상해요", weatherId: "rain" },
-  "emo-upset": { label: "기분 나빠요", weatherId: "wind" },
-  "emo-disappointed": { label: "서운해요", weatherId: "rain" },
-  "emo-embarrassed": { label: "부끄러워요", weatherId: "cloudy" },
+  "emo-annoyed": { label: "짜증났어요", weatherId: "fog" },
+  "emo-unfair": { label: "억울했어요", weatherId: "fog" },
+  "emo-angry": { label: "화났어요", weatherId: "storm" },
+  "emo-sad": { label: "속상했어요", weatherId: "rain" },
+  "emo-upset": { label: "기분 나빴어요", weatherId: "wind" },
+  "emo-disappointed": { label: "서운했어요", weatherId: "rain" },
+  "emo-embarrassed": { label: "부끄러웠어요", weatherId: "cloudy" },
   "emo-surprised": { label: "놀랐어요", weatherId: "lightning" },
-  "emo-jealous": { label: "부러워요", weatherId: "fog" },
+  "emo-jealous": { label: "부러웠어요", weatherId: "fog" },
 
   // 상황에 나오니까 추가
   "emo-confused": { label: "어이없었어요", weatherId: "fog" },
-  "emo-happy": { label: "기뻐요", weatherId: "sunny" },
+  "emo-happy": { label: "기뻤어요", weatherId: "sunny" },
   "emo-proud": { label: "뿌듯했어요", weatherId: "rainbow" },
   "emo-thankful": { label: "고마웠어요", weatherId: "rainbow" },
-  "emo-relieved": { label: "안도돼요", weatherId: "sunny" },
+  "emo-relieved": { label: "마음이 놓여요", weatherId: "sunny" },
 };
 
 export function getEmotionOptionsForSituation(
